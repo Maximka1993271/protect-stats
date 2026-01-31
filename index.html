@@ -4,94 +4,22 @@
     <meta charset="UTF-8">
     <title>ProtectCMDS | Aegis Eternity</title>
     <style>
-        :root {
-            --bg: #111111;
-            --card: #1c1c1c;
-            --accent: #00ff88;
-            --text: #ffffff;
-            --dim: #777777;
-        }
-
-        body {
-            background-color: #0a0a0a;
-            color: var(--text);
-            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        .dashboard {
-            background-color: var(--bg);
-            width: 860px;
-            padding: 50px;
-            border-radius: 30px;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-            position: relative;
-            border: 1px solid #222;
-        }
-
+        :root { --bg: #111111; --card: #1c1c1c; --accent: #00ff88; --text: #ffffff; --dim: #777777; }
+        body { background-color: #0a0a0a; color: var(--text); font-family: 'Inter', 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .dashboard { background-color: var(--bg); width: 860px; padding: 50px; border-radius: 30px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); position: relative; border: 1px solid #222; }
         .langs { position: absolute; top: 45px; right: 50px; display: flex; gap: 8px; }
-        .btn {
-            background: #252525;
-            color: var(--dim);
-            border: none;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 12px;
-        }
-        .active { 
-            background: var(--accent); 
-            color: #000; 
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4); 
-        }
-
+        .btn { background: #252525; color: var(--dim); border: none; padding: 8px 14px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 12px; }
+        .active { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(0, 255, 136, 0.4); }
         h1 { font-size: 34px; margin: 0; font-weight: 800; letter-spacing: -1px; }
         .version { font-size: 14px; color: #444; margin-left: 10px; font-weight: 400; }
-
         .status-row { margin: 20px 0 40px 0; color: var(--dim); font-size: 15px; display: flex; align-items: center; gap: 10px; }
-        .badge {
-            color: var(--accent);
-            border: 1px solid var(--accent);
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-            100% { opacity: 1; }
-        }
-
+        .badge { color: var(--accent); border: 1px solid var(--accent); padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
-        
-        .card {
-            background: var(--card);
-            padding: 25px;
-            border-radius: 18px;
-            position: relative;
-            transition: 0.3s;
-        }
-
-        .card::before {
-            content: ''; position: absolute; left: 0; top: 25%; height: 50%; width: 4px;
-            background: var(--accent); border-radius: 0 4px 4px 0;
-            box-shadow: 0 0 10px var(--accent);
-        }
-
+        .card { background: var(--card); padding: 25px; border-radius: 18px; position: relative; transition: 0.3s; }
+        .card::before { content: ''; position: absolute; left: 0; top: 25%; height: 50%; width: 4px; background: var(--accent); border-radius: 0 4px 4px 0; box-shadow: 0 0 10px var(--accent); }
         .card h3 { margin: 0; font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1.5px; }
         .card p { font-size: 18px; margin: 12px 0 0 0; font-weight: 700; color: #eee; }
-
         .footer { text-align: center; margin-top: 60px; color: #333; font-size: 9px; text-transform: uppercase; letter-spacing: 3px; font-weight: 600; }
     </style>
 </head>
@@ -105,7 +33,6 @@
     </div>
 
     <h1>ProtectCMDS <span style="font-weight:400" id="main-title">...</span> <span class="version">v3.2.3</span></h1>
-    
     <div class="status-row" id="status-line">...</div>
 
     <div class="grid">
@@ -121,6 +48,5 @@
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
