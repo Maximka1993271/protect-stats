@@ -2,54 +2,131 @@
 <html lang="ua">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProtectCMDS | Enterprise Security</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ff88'%3E%3Cpath d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.5h-7V6.3l7-3.11v8.31z'/%3E%3C/svg%3E">
     <style>
-        :root { --bg: #0d0d0d; --card: #161616; --accent: #00ff88; --text: #ffffff; --dim: #888888; }
-        body { background-color: #050505; color: var(--text); font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        :root { --bg: #0d0d0d; --card: #161616; --accent: #00ff88; --text: #ffffff; --dim: #888888; --error: #ff4444; }
+        body { background-color: #050505; color: var(--text); font-family: 'Inter', 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        
         .dashboard { background-color: var(--bg); width: 900px; padding: 50px; border-radius: 40px; box-shadow: 0 50px 120px rgba(0,0,0,0.9); position: relative; border: 1px solid #1a1a1a; }
+        
         .langs { position: absolute; top: 45px; right: 50px; display: flex; gap: 10px; }
-        .btn { background: #1a1a1a; color: var(--dim); border: 1px solid #222; padding: 8px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-size: 11px; text-transform: uppercase; }
+        .btn { background: #1a1a1a; color: var(--dim); border: 1px solid #222; padding: 8px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 11px; text-transform: uppercase; }
         .btn:hover { border-color: var(--accent); color: var(--text); }
-        .btn:active { transform: scale(0.92); }
         .active { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 0 25px rgba(0, 255, 136, 0.3); }
-        h1 { font-size: 38px; margin: 0; font-weight: 800; letter-spacing: -1.5px; }
-        .version { font-size: 14px; color: #333; margin-left: 15px; font-weight: 600; background: #111; padding: 4px 10px; border-radius: 6px; vertical-align: middle; }
+        
+        h1 { font-size: 38px; margin: 0; font-weight: 800; letter-spacing: -1.5px; display: flex; align-items: center; }
+        .version { font-size: 14px; color: #333; margin-left: 15px; font-weight: 600; background: #111; padding: 4px 10px; border-radius: 6px; }
+        
         .status-row { margin: 25px 0 45px 0; color: var(--dim); font-size: 15px; display: flex; align-items: center; gap: 12px; }
-        .badge { color: var(--accent); border: 1px solid rgba(0, 255, 136, 0.3); background: rgba(0, 255, 136, 0.05); padding: 4px 14px; border-radius: 30px; font-size: 10px; font-weight: 800; text-transform: uppercase; animation: pulse 2.5s infinite; }
+        .badge { color: var(--accent); border: 1px solid rgba(0, 255, 136, 0.3); background: rgba(0, 255, 136, 0.05); padding: 4px 14px; border-radius: 30px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; animation: pulse 2.5s infinite; }
+        
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); } }
+        
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .card { background: var(--card); padding: 30px; border-radius: 22px; position: relative; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid #1f1f1f; }
-        .card:hover { transform: translateY(-8px); border-color: #333; background: #1a1a1a; }
+        .card:hover { transform: translateY(-5px); border-color: #333; background: #1a1a1a; }
         .card::before { content: ''; position: absolute; left: 0; top: 30%; height: 40%; width: 3px; background: var(--accent); border-radius: 0 4px 4px 0; opacity: 0.5; }
+        
         .card h3 { margin: 0; font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
-        .card p { font-size: 19px; margin: 15px 0 0 0; font-weight: 700; color: #ffffff; }
+        .card p { font-size: 19px; margin: 15px 0 0 0; font-weight: 700; color: #ffffff; line-height: 1.2; }
+        
         .footer { text-align: center; margin-top: 60px; color: #252525; font-size: 10px; text-transform: uppercase; letter-spacing: 5px; font-weight: 700; }
     </style>
 </head>
 <body>
+
 <div class="dashboard">
     <div class="langs">
-        <button id="ua" class="btn" onclick="setLang('ua')">UA</button>
+        <button id="ua" class="btn active" onclick="setLang('ua')">UA</button>
         <button id="ru" class="btn" onclick="setLang('ru')">RU</button>
         <button id="en" class="btn" onclick="setLang('en')">EN</button>
     </div>
+
     <h1>ProtectCMDS <span class="version">v4.4.1</span></h1>
     <div class="status-row">
-        <span class="badge">Active</span>
-        <span id="status-text">...</span>
+        <span class="badge">Active Protection</span>
+        <span id="status-text">Система аналізу трафіку Zero-Latency активована</span>
     </div>
+
     <div class="grid">
-        <div class="card"><h3 id="h1">...</h3><p id="v1">...</p></div>
-        <div class="card"><h3 id="h2">...</h3><p id="v2">...</p></div>
-        <div class="card"><h3 id="h3">...</h3><p id="v3">...</p></div>
-        <div class="card"><h3 id="h4">...</h3><p id="v4">...</p></div>
-        <div class="card"><h3 id="h5">...</h3><p id="v5">...</p></div>
-        <div class="card"><h3 id="h6">...</h3><p id="v6">...</p></div>
+        <div class="card">
+            <h3 id="h1">Оптимізація</h3>
+            <p id="v1">Zero-Latency Engine</p>
+        </div>
+        <div class="card">
+            <h3 id="h2">Покарання</h3>
+            <p id="v2">Прогресивна шкала</p>
+        </div>
+        <div class="card">
+            <h3 id="h3">Адмін-панель</h3>
+            <p id="v3">3 рівні доступу</p>
+        </div>
+        <div class="card">
+            <h3 id="h4">Моніторинг</h3>
+            <p id="v4">Live Audit Log</p>
+        </div>
+        <div class="card">
+            <h3 id="h5">Фільтрація</h3>
+            <p id="v5">Dynamic Blacklist</p>
+        </div>
+        <div class="card">
+            <h3 id="h6">Статус сервера</h3>
+            <p id="v6">Захищено Aegis</p>
+        </div>
     </div>
-    <div class="footer">POWERED BY AEGIS ETERNITY &copy; 2026</div>
+
+    <div class="footer">Enterprise Security Technology &copy; 2026</div>
 </div>
-<script src="script.js"></script>
+
+<script>
+    const translations = {
+        ua: {
+            title: "ProtectCMDS",
+            status: "Система аналізу трафіку Zero-Latency активована",
+            h1: "Оптимізація", v1: "Zero-Latency Engine",
+            h2: "Покарання", v2: "Прогресивна шкала",
+            h3: "Адмін-панель", v3: "3 рівні доступу",
+            h4: "Моніторинг", v4: "Live Audit Log",
+            h5: "Фільтрація", v5: "Dynamic Blacklist",
+            h6: "Статус сервера", v6: "Захищено Aegis"
+        },
+        ru: {
+            title: "ProtectCMDS",
+            status: "Система анализа трафика Zero-Latency активирована",
+            h1: "Оптимизация", v1: "Zero-Latency Engine",
+            h2: "Наказания", v2: "Прогрессивная шкала",
+            h3: "Админ-панель", v3: "3 уровня доступа",
+            h4: "Мониторинг", v4: "Live Audit Log",
+            h5: "Фильтрация", v5: "Dynamic Blacklist",
+            h6: "Статус сервера", v6: "Защищено Aegis"
+        },
+        en: {
+            title: "ProtectCMDS",
+            status: "Zero-Latency traffic analysis engine active",
+            h1: "Optimization", v1: "Zero-Latency Engine",
+            h2: "Punishment", v2: "Progressive Tiers",
+            h3: "Admin Panel", v3: "3 Access Levels",
+            h4: "Monitoring", v4: "Live Audit Log",
+            h5: "Filtering", v5: "Dynamic Blacklist",
+            h6: "Server Status", v6: "Secured by Aegis"
+        }
+    };
+
+    function setLang(lang) {
+        document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(lang).classList.add('active');
+        
+        const t = translations[lang];
+        document.getElementById('status-text').innerText = t.status;
+        for (let i = 1; i <= 6; i++) {
+            document.getElementById(`h${i}`).innerText = t[`h${i}`];
+            document.getElementById(`v${i}`).innerText = t[`v${i}`];
+        }
+    }
+    
+    // Ініціалізація за замовчуванням (UA)
+    setLang('ua');
+</script>
 </body>
 </html>
