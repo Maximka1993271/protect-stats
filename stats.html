@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>ProtectCMDS | Aegis Eternity</title>
+    <style>
+        :root {
+            --bg: #111111;
+            --card: #1c1c1c;
+            --accent: #00ff88;
+            --text: #ffffff;
+            --dim: #777777;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: var(--text);
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .dashboard {
+            background-color: var(--bg);
+            width: 860px;
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            position: relative;
+            border: 1px solid #222;
+        }
+
+        .langs { position: absolute; top: 45px; right: 50px; display: flex; gap: 8px; }
+        .btn {
+            background: #252525;
+            color: var(--dim);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 12px;
+        }
+        .active { 
+            background: var(--accent); 
+            color: #000; 
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4); 
+        }
+
+        h1 { font-size: 34px; margin: 0; font-weight: 800; letter-spacing: -1px; }
+        .version { font-size: 14px; color: #444; margin-left: 10px; font-weight: 400; }
+
+        .status-row { margin: 20px 0 40px 0; color: var(--dim); font-size: 15px; display: flex; align-items: center; gap: 10px; }
+        .badge {
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        
+        .card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 18px;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .card::before {
+            content: ''; position: absolute; left: 0; top: 25%; height: 50%; width: 4px;
+            background: var(--accent); border-radius: 0 4px 4px 0;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .card h3 { margin: 0; font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1.5px; }
+        .card p { font-size: 18px; margin: 12px 0 0 0; font-weight: 700; color: #eee; }
+
+        .footer { text-align: center; margin-top: 60px; color: #333; font-size: 9px; text-transform: uppercase; letter-spacing: 3px; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <div class="langs">
+        <button id="ua" class="btn" onclick="setLang('ua')">UA</button>
+        <button id="ru" class="btn" onclick="setLang('ru')">RU</button>
+        <button id="en" class="btn" onclick="setLang('en')">EN</button>
+    </div>
+
+    <h1>ProtectCMDS <span style="font-weight:400" id="main-title">...</span> <span class="version">v3.2.3</span></h1>
+    
+    <div class="status-row" id="status-line">...</div>
+
+    <div class="grid">
+        <div class="card"><h3 id="h1">...</h3><p id="v1">...</p></div>
+        <div class="card"><h3 id="h2">...</h3><p id="v2">...</p></div>
+        <div class="card"><h3 id="h3">...</h3><p id="v3">...</p></div>
+        <div class="card"><h3 id="h4">...</h3><p id="v4">...</p></div>
+        <div class="card"><h3 id="h5">...</h3><p id="v5">...</p></div>
+        <div class="card"><h3 id="h6">...</h3><p id="v6">...</p></div>
+    </div>
+
+    <div class="footer">Powered by Aegis Eternity Technology &copy; 2026</div>
+</div>
+
+<script>
+    const data = {
+        ua: {
+            title: 'Моніторинг',
+            status: 'Ядро Aegis Eternity: <span class="badge">ACTIVE (64-BIT)</span>',
+            h: ["Ліміт порушень", "Rate Limit", "Час бану", "Скидання ліміту", "Метод бану", "Статус логів"],
+            v: ["За замовчуванням", "Динамічний", "Стандартний", "Автоматично", "SourceMod Engine", "Level 2 (Warn)"]
+        },
+        ru: {
+            title: 'Мониторинг',
+            status: 'Ядро Aegis Eternity: <span class="badge">ACTIVE (64-BIT)</span>',
+            h: ["Лимит нарушений", "Rate Limit", "Время бана", "Сброс лимита", "Метод бана", "Статус логов"],
+            v: ["По умолчанию", "Динамический", "Стандартный", "Автоматически", "SourceMod Engine", "Level 2 (Warn)"]
+        },
+        en: {
+            title: 'Monitoring',
+            status: 'Aegis Eternity Core: <span class="badge">ACTIVE (64-BIT)</span>',
+            h: ["Violation Limit", "Rate Limit", "Ban Duration", "Reset Period", "Ban Method", "Log Level"],
+            v: ["Default (Standard)", "Dynamic / Auto", "Default (CFG)", "Automatic", "SourceMod Engine", "Level 2 (Warn)"]
+        }
+    };
+
+    function setLang(lang) {
+        document.getElementById('main-title').innerText = data[lang].title;
+        document.getElementById('status-line').innerHTML = data[lang].status;
+        for(let i=1; i<=6; i++) {
+            document.getElementById('h'+i).innerText = data[lang].h[i-1];
+            document.getElementById('v'+i).innerText = data[lang].v[i-1];
+        }
+        ['ua', 'ru', 'en'].forEach(l => {
+            document.getElementById(l).className = l === lang ? 'btn active' : 'btn';
+        });
+    }
+
+    // Примусова активація RU при завантаженні сторінки
+    document.addEventListener("DOMContentLoaded", function() {
+        setLang('ru');
+    });
+</script>
+</body>
+</html>
