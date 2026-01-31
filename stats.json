@@ -1,9 +1,8 @@
 {
-  "violation_limit": "30",
-  "global_rate": "25",
-  "ban_time": "120 min",
-  "reset_type": "Автоматично",
-  "ban_method": "SourceMod Engine",
-  "log_level": "Level 2 (Warn)",
-  "status": "ACTIVE (64-BIT)"
+  "v1": "Zero-Latency Engine",
+  "v2": "30m → 2h → 24h",
+  "v3": "3 рівні доступу",
+  "v4": "Live Stats",
+  "v5": "Dynamic Blacklist",
+  "v6": "Secured"
 }

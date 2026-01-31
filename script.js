@@ -1,65 +1,71 @@
 const langData = {
     ua: {
-        title: 'Моніторинг',
-        status: 'Ядро Aegis Eternity: <span class="badge">ACTIVE (64-BIT)</span>',
-        h: ["Ліміт порушень", "Rate Limit", "Час бану", "Скидання ліміту", "Метод бану", "Статус логів"],
-        v: ["30", "25", "120 min", "Автоматично", "SourceMod Engine", "Level 2 (Warn)"],
-        dict: { "Автоматично": "Автоматично" }
+        status: 'Система аналізу трафіку Zero-Latency активована',
+        h: ["Оптимізація", "Покарання", "Адмін-панель", "Моніторинг", "Фільтрація", "Статус сервера"],
+        v: ["Zero-Latency Engine", "Прогресивна шкала", "3 рівні доступу", "Live Audit Log", "Dynamic Blacklist", "Захищено Aegis"],
+        dict: { "Secured": "Захищено Aegis", "Active": "Активно", "Live Stats": "Активно" }
     },
     ru: {
-        title: 'Мониторинг',
-        status: 'Ядро Aegis Eternity: <span class="badge">ACTIVE (64-BIT)</span>',
-        h: ["Лимит нарушений", "Rate Limit", "Время бана", "Сброс лимита", "Метод бана", "Статус логов"],
-        v: ["30", "25", "120 min", "Автоматически", "SourceMod Engine", "Level 2 (Warn)"],
-        dict: { "Автоматично": "Автоматически" }
+        status: 'Система анализа трафика Zero-Latency активирована',
+        h: ["Оптимизация", "Наказания", "Админ-панель", "Мониторинг", "Фильтрация", "Статус сервера"],
+        v: ["Zero-Latency Engine", "Прогрессивная шкала", "3 уровня доступа", "Live Audit Log", "Dynamic Blacklist", "Защищено Aegis"],
+        dict: { "Secured": "Защищено Aegis", "Active": "Активно", "Live Stats": "Активно" }
     },
     en: {
-        title: 'Monitoring',
-        status: 'Aegis Eternity Core: <span class="badge">ACTIVE (64-BIT)</span>',
-        h: ["Violation Limit", "Rate Limit", "Ban Duration", "Reset Period", "Ban Method", "Log Level"],
-        v: ["30", "25", "120 min", "Automatic", "SourceMod Engine", "Level 2 (Warn)"],
-        dict: { "Автоматично": "Automatic" }
+        status: 'Zero-Latency traffic analysis engine active',
+        h: ["Optimization", "Punishment", "Admin Panel", "Monitoring", "Filtering", "Server Status"],
+        v: ["Zero-Latency Engine", "Progressive Tiers", "3 Access Levels", "Live Audit Log", "Dynamic Blacklist", "Secured by Aegis"],
+        dict: { "Secured": "Secured by Aegis", "Active": "Active", "Live Stats": "Active" }
     }
 };
 
-let currentLang = 'ru'; // Запам'ятовуємо мову
+let currentLang = localStorage.getItem('language') || 'ua';
+const ui = { status: null, h: [], v: [], btns: null };
+
+function initDOM() {
+    ui.status = document.getElementById('status-text');
+    ui.btns = document.querySelectorAll('.btn');
+    for (let i = 1; i <= 6; i++) {
+        ui.h.push(document.getElementById('h' + i));
+        ui.v.push(document.getElementById('v' + i));
+    }
+}
 
 function setLang(lang) {
     currentLang = lang;
-    document.getElementById('main-title').innerText = langData[lang].title;
-    document.getElementById('status-line').innerHTML = langData[lang].status;
-    
-    for(let i=1; i<=6; i++) {
-        document.getElementById('h'+i).innerText = langData[lang].h[i-1];
-        document.getElementById('v'+i).innerText = langData[lang].v[i-1];
-    }
-    
-    ['ua', 'ru', 'en'].forEach(l => {
-        document.getElementById(l).className = l === lang ? 'btn active' : 'btn';
-    });
-    
+    localStorage.setItem('language', lang);
+    const data = langData[lang];
+
+    if (ui.status) ui.status.innerText = data.status;
+    ui.h.forEach((el, i) => { if (el) el.innerText = data.h[i]; });
+    ui.v.forEach((el, i) => { if (el) el.innerText = data.v[i]; });
+    ui.btns.forEach(btn => btn.classList.toggle('active', btn.id === lang));
+
     loadLiveStats();
 }
 
-function loadLiveStats() {
-    fetch('stats.json?t=' + new Date().getTime())
-      .then(response => response.json())
-      .then(data => {
-        const d = langData[currentLang].dict; // Беремо словник перекладів
+async function loadLiveStats() {
+    try {
+        const response = await fetch(`stats.json?t=${Date.now()}`);
+        if (!response.ok) return;
+        const data = await response.json();
+        const d = langData[currentLang].dict;
 
-        if(data.violation_limit) document.getElementById('v1').innerText = data.violation_limit;
-        if(data.global_rate) document.getElementById('v2').innerText = data.global_rate;
-        if(data.ban_time) document.getElementById('v3').innerText = data.ban_time;
+        // Оновлюємо значення, якщо вони присутні в JSON
+        if (data.v1) ui.v[0].innerText = data.v1;
+        if (data.v2) ui.v[1].innerText = data.v2;
+        if (data.v3) ui.v[2].innerText = data.v3;
         
-        // Перевіряємо: якщо в JSON прийшло "Автоматично", міняємо на переклад з dict
-        if(data.reset_type) {
-            document.getElementById('v4').innerText = d[data.reset_type] || data.reset_type;
-        }
-        
-        if(data.ban_method) document.getElementById('v5').innerText = data.ban_method;
-        if(data.log_level) document.getElementById('v6').innerText = data.log_level;
-      })
-      .catch(e => console.log('Fetch error:', e));
+        // Статуси проганяємо через словник перекладу
+        if (data.v4) ui.v[3].innerText = d[data.v4] || data.v4;
+        if (data.v5) ui.v[4].innerText = d[data.v5] || data.v5;
+        if (data.v6) ui.v[5].innerText = d[data.v6] || data.v6;
+    } catch (e) { console.warn('Sync skipped.'); }
 }
 
-document.addEventListener("DOMContentLoaded", () => setLang('ru'));
+setInterval(loadLiveStats, 300000); // 5 хвилин
+
+document.addEventListener("DOMContentLoaded", () => {
+    initDOM();
+    setLang(currentLang);
+});
