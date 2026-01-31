@@ -121,7 +121,7 @@
 </div>
 
 <script>
-    const data = {
+    const langData = {
         ua: {
             title: 'Моніторинг',
             status: 'Ядро Aegis Eternity: <span class="badge">ACTIVE (64-BIT)</span>',
@@ -143,20 +143,37 @@
     };
 
     function setLang(lang) {
-        document.getElementById('main-title').innerText = data[lang].title;
-        document.getElementById('status-line').innerHTML = data[lang].status;
+        document.getElementById('main-title').innerText = langData[lang].title;
+        document.getElementById('status-line').innerHTML = langData[lang].status;
         for(let i=1; i<=6; i++) {
-            document.getElementById('h'+i).innerText = data[lang].h[i-1];
-            document.getElementById('v'+i).innerText = data[lang].v[i-1];
+            document.getElementById('h'+i).innerText = langData[lang].h[i-1];
+            document.getElementById('v'+i).innerText = langData[lang].v[i-1];
         }
         ['ua', 'ru', 'en'].forEach(l => {
             document.getElementById(l).className = l === lang ? 'btn active' : 'btn';
         });
+        
+        // Після зміни мови — перепідвантажуємо дані з JSON, щоб вони не затерлися статикою
+        loadLiveStats();
     }
 
-    // Примусова активація RU при завантаженні сторінки
+    function loadLiveStats() {
+        fetch('stats.json')
+          .then(response => response.json())
+          .then(data => {
+            if(data.violation_limit) document.getElementById('v1').innerText = data.violation_limit;
+            if(data.global_rate) document.getElementById('v2').innerText = data.global_rate;
+            if(data.ban_time) document.getElementById('v3').innerText = data.ban_time;
+            if(data.reset_type) document.getElementById('v4').innerText = data.reset_type;
+            if(data.ban_method) document.getElementById('v5').innerText = data.ban_method;
+            if(data.log_level) document.getElementById('v6').innerText = data.log_level;
+          })
+          .catch(error => console.log('Помилка завантаження даних JSON:', error));
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         setLang('ru');
+        loadLiveStats();
     });
 </script>
 </body>

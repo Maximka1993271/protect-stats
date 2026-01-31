@@ -1,0 +1,9 @@
+{
+  "violation_limit": "3",
+  "global_rate": "25",
+  "ban_time": "120 min",
+  "reset_type": "Автоматично",
+  "ban_method": "SourceMod Engine",
+  "log_level": "Level 2 (Warn)",
+  "status": "ACTIVE (64-BIT)"
+}
