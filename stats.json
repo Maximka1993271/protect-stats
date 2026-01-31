@@ -1,5 +1,5 @@
 {
-  "violation_limit": "3",
+  "violation_limit": "30",
   "global_rate": "25",
   "ban_time": "120 min",
   "reset_type": "Автоматично",
