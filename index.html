@@ -126,19 +126,19 @@
             title: 'Моніторинг',
             status: 'Ядро Aegis Eternity: <span class="badge">ACTIVE (64-BIT)</span>',
             h: ["Ліміт порушень", "Rate Limit", "Час бану", "Скидання ліміту", "Метод бану", "Статус логів"],
-            v: ["За замовчуванням", "Динамічний", "Стандартний", "Автоматично", "SourceMod Engine", "Level 2 (Warn)"]
+            v: ["30", "25", "120 min", "Автоматично", "SourceMod Engine", "Level 2 (Warn)"]
         },
         ru: {
             title: 'Мониторинг',
             status: 'Ядро Aegis Eternity: <span class="badge">ACTIVE (64-BIT)</span>',
             h: ["Лимит нарушений", "Rate Limit", "Время бана", "Сброс лимита", "Метод бана", "Статус логов"],
-            v: ["По умолчанию", "Динамический", "Стандартный", "Автоматически", "SourceMod Engine", "Level 2 (Warn)"]
+            v: ["30", "25", "120 min", "Автоматически", "SourceMod Engine", "Level 2 (Warn)"]
         },
         en: {
             title: 'Monitoring',
             status: 'Aegis Eternity Core: <span class="badge">ACTIVE (64-BIT)</span>',
             h: ["Violation Limit", "Rate Limit", "Ban Duration", "Reset Period", "Ban Method", "Log Level"],
-            v: ["Default (Standard)", "Dynamic / Auto", "Default (CFG)", "Automatic", "SourceMod Engine", "Level 2 (Warn)"]
+            v: ["30", "25", "120 min", "Automatic", "SourceMod Engine", "Level 2 (Warn)"]
         }
     };
 
@@ -153,12 +153,12 @@
             document.getElementById(l).className = l === lang ? 'btn active' : 'btn';
         });
         
-        // Після зміни мови — перепідвантажуємо дані з JSON, щоб вони не затерлися статикою
         loadLiveStats();
     }
 
     function loadLiveStats() {
-        fetch('stats.json')
+        // Додаємо ?t=... щоб уникнути кешування файлу браузером
+        fetch('stats.json?t=' + new Date().getTime())
           .then(response => response.json())
           .then(data => {
             if(data.violation_limit) document.getElementById('v1').innerText = data.violation_limit;
@@ -168,12 +168,11 @@
             if(data.ban_method) document.getElementById('v5').innerText = data.ban_method;
             if(data.log_level) document.getElementById('v6').innerText = data.log_level;
           })
-          .catch(error => console.log('Помилка завантаження даних JSON:', error));
+          .catch(error => console.log('Ошибка загрузки JSON:', error));
     }
 
     document.addEventListener("DOMContentLoaded", function() {
         setLang('ru');
-        loadLiveStats();
     });
 </script>
 </body>
