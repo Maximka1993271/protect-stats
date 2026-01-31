@@ -27,15 +27,12 @@ function setLang(lang) {
         document.getElementById('v'+i).innerText = langData[lang].v[i-1];
     }
     ['ua', 'ru', 'en'].forEach(l => {
-        const btn = document.getElementById(l);
-        if(btn) btn.className = l === lang ? 'btn active' : 'btn';
+        document.getElementById(l).className = l === lang ? 'btn active' : 'btn';
     });
-    
     loadLiveStats();
 }
 
 function loadLiveStats() {
-    // Додаємо мітку часу, щоб обійти кеш GitHub
     fetch('stats.json?t=' + new Date().getTime())
       .then(response => response.json())
       .then(data => {
@@ -46,9 +43,7 @@ function loadLiveStats() {
         if(data.ban_method) document.getElementById('v5').innerText = data.ban_method;
         if(data.log_level) document.getElementById('v6').innerText = data.log_level;
       })
-      .catch(error => console.error('Помилка завантаження статистики:', error));
+      .catch(e => console.log('Fetch error:', e));
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    setLang('ru');
-});
+document.addEventListener("DOMContentLoaded", () => setLang('ru'));
