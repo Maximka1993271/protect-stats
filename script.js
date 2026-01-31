@@ -1,77 +1,39 @@
-const langData = {
+const lang = {
     ua: {
         status: 'Система аналізу трафіку Zero-Latency активована',
-        badge: 'Active',
-        h: ["Оптимізація", "Покарання", "Адмін-панель", "Моніторинг", "Фільтрація", "Статус сервера"],
-        defaults: ["Zero-Latency Engine", "30m → 2h → 24h", "3 рівні доступу", "Active", "Dynamic Blacklist", "Secured"],
-        dict: { "Secured": "Захищено Aegis", "Active": "Активно", "Live Stats": "Активно", "Dynamic Blacklist": "Динам. список" }
+        h: ["Оптимізація", "Наказання", "Адмін-панель", "Моніторинг", "Фільтрація", "Статус сервера"],
+        defaults: ["Zero-Latency Engine", "30m → 2h → 24h", "3 рівні доступу", "Активно", "Динам. список", "Захищено Aegis"]
     },
     ru: {
         status: 'Система анализа трафика Zero-Latency активирована',
-        badge: 'Active',
         h: ["Оптимизация", "Наказания", "Админ-панель", "Мониторинг", "Фильтрация", "Статус сервера"],
-        defaults: ["Zero-Latency Engine", "30m → 2h → 24h", "3 уровня доступа", "Active", "Dynamic Blacklist", "Secured"],
-        dict: { "Secured": "Защищено Aegis", "Active": "Активно", "Live Stats": "Активно", "Dynamic Blacklist": "Динам. список" }
+        defaults: ["Zero-Latency Engine", "30m → 2h → 24h", "3 уровня доступа", "Активно", "Динам. список", "Защищено Aegis"]
     },
     en: {
         status: 'Zero-Latency traffic analysis engine active',
-        badge: 'Active',
         h: ["Optimization", "Punishment", "Admin Panel", "Monitoring", "Filtering", "Server Status"],
-        defaults: ["Zero-Latency Engine", "Progressive Tiers", "3 Access Levels", "Active", "Dynamic Blacklist", "Secured"],
-        dict: { "Secured": "Secured by Aegis", "Active": "Active", "Live Stats": "Active", "Dynamic Blacklist": "Dynamic Blacklist" }
+        defaults: ["Zero-Latency Engine", "30m → 2h → 24h", "3 Access Levels", "Active", "Dynamic List", "Secured by Aegis"]
     }
 };
 
-let currentLang = localStorage.getItem('language') || 'ua';
-let lastStats = null;
-const ui = { status: null, badge: null, h: [], v: [], btns: null };
+let currentLang = localStorage.getItem('lang') || 'ua';
 
-function initDOM() {
-    ui.status = document.getElementById('status-text');
-    ui.badge = document.getElementById('badge-text');
-    ui.btns = document.querySelectorAll('.btn');
-    ui.h = []; ui.v = [];
-    for (let i = 1; i <= 6; i++) {
-        ui.h.push(document.getElementById('h' + i));
-        ui.v.push(document.getElementById('v' + i));
-    }
-}
-
-function renderStats() {
-    const data = langData[currentLang];
-    ui.v.forEach((el, i) => {
-        if (!el) return;
-        const key = 'v' + (i + 1);
-        const val = (lastStats && lastStats[key]) ? lastStats[key] : data.defaults[i];
-        el.innerText = data.dict[val] || val;
-    });
-}
-
-async function loadLiveStats() {
+async function updateData() {
+    const data = lang[currentLang];
+    document.getElementById('status-text').innerText = data.status;
+    
     try {
-        const response = await fetch(`stats.json?v=${Date.now()}`); // Захист від кешу
-        if (response.ok) {
-            lastStats = await response.json();
-            renderStats();
-        }
-    } catch (e) { console.warn("Файл stats.json не доступний."); renderStats(); }
+        const res = await fetch(`stats.json?nocache=${Date.now()}`);
+        const json = await res.json();
+        for(let i=1; i<=6; i++) document.getElementById(`v${i}`).innerText = json[`v${i}`] || data.defaults[i-1];
+    } catch(e) {
+        data.defaults.forEach((v, i) => document.getElementById(`v${i+1}`).innerText = v);
+    }
+    
+    data.h.forEach((h, i) => document.getElementById(`h${i+1}`).innerText = h);
+    document.querySelectorAll('.btn').forEach(b => b.classList.toggle('active', b.id === currentLang));
 }
 
-function setLang(lang) {
-    currentLang = lang;
-    localStorage.setItem('language', lang);
-    const data = langData[lang];
+function setLang(l) { currentLang = l; localStorage.setItem('lang', l); updateData(); }
 
-    if (ui.status) ui.status.innerText = data.status;
-    if (ui.badge) ui.badge.innerText = data.badge;
-    ui.h.forEach((el, i) => { if (el) el.innerText = data.h[i]; });
-    ui.btns.forEach(btn => btn.classList.toggle('active', btn.id === lang));
-    renderStats();
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    initDOM();
-    setLang(currentLang);
-    loadLiveStats();
-    setInterval(loadLiveStats, 20000); // Оновлення кожні 20 секунд
-});
+document.addEventListener('DOMContentLoaded', () => { updateData(); setInterval(updateData, 30000); });
