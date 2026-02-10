@@ -20,46 +20,17 @@ let currentLang = localStorage.getItem('lang') || 'ru';
 
 async function updateData() {
     const data = lang[currentLang];
-    const statusElem = document.getElementById('status-text');
-    if (statusElem) statusElem.innerText = data.status;
-    
+    document.getElementById('status-text').innerText = data.status;
     try {
-        // Fetch fresh stats with cache busting
         const res = await fetch(`stats.json?nocache=${Date.now()}`);
-        if (!res.ok) throw new Error();
-        
         const json = await res.json();
-        for(let i=1; i<=6; i++) {
-            const valElem = document.getElementById(`v${i}`);
-            if (valElem) valElem.innerText = json[`v${i}`] || data.defaults[i-1];
-        }
+        for(let i=1; i<=6; i++) document.getElementById(`v${i}`).innerText = json[`v${i}`] || data.defaults[i-1];
     } catch(e) {
-        // Fallback to language defaults if JSON fails
-        for(let i=1; i<=6; i++) {
-            const valElem = document.getElementById(`v${i}`);
-            if (valElem) valElem.innerText = data.defaults[i-1];
-        }
+        data.defaults.forEach((v, i) => document.getElementById(`v${i+1}`).innerText = v);
     }
-    
-    // Update headers (h1-h6)
-    data.h.forEach((hText, i) => {
-        const hElem = document.getElementById(`h${i+1}`);
-        if (hElem) hElem.innerText = hText;
-    });
-
-    // Update active button state
-    document.querySelectorAll('.btn').forEach(b => {
-        b.classList.toggle('active', b.id === currentLang);
-    });
+    data.h.forEach((h, i) => document.getElementById(`h${i+1}`).innerText = h);
+    document.querySelectorAll('.btn').forEach(b => b.classList.toggle('active', b.id === currentLang));
 }
 
-function setLang(l) { 
-    currentLang = l; 
-    localStorage.setItem('lang', l); 
-    updateData(); 
-}
-
-document.addEventListener('DOMContentLoaded', () => { 
-    updateData(); 
-    setInterval(updateData, 30000); // Auto-refresh every 30 seconds
-});
+function setLang(l) { currentLang = l; localStorage.setItem('lang', l); updateData(); }
+document.addEventListener('DOMContentLoaded', () => { updateData(); setInterval(updateData, 30000); });
