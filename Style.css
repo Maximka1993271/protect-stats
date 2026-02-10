@@ -45,7 +45,6 @@ h1 {
     font-weight: 800;
     font-size: 32px;
     margin: 0;
-    letter-spacing: -1px;
 }
 
 .version-badge {
@@ -93,6 +92,12 @@ h1 {
     font-size: 12px;
     font-weight: 800;
     border: 1px solid var(--accent-green);
+    text-transform: uppercase;
+}
+
+#status-text {
+    color: var(--text-dim);
+    font-size: 15px;
 }
 
 .grid {
@@ -126,19 +131,16 @@ h1 {
 .card-value {
     font-size: 18px;
     font-weight: 600;
-    color: #ffffff;
 }
 
 .footer {
     margin-top: 40px;
     text-align: center;
     font-size: 10px;
-    text-transform: uppercase;
     color: #374151;
     letter-spacing: 2px;
 }
 
 @media (max-width: 768px) {
     .grid { grid-template-columns: 1fr; }
-    .header { flex-direction: column; gap: 20px; text-align: center; }
 }

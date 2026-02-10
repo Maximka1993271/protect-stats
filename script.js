@@ -24,9 +24,9 @@ async function updateData() {
     if (statusElem) statusElem.innerText = data.status;
     
     try {
-        // Добавление nocache предотвращает отображение старых данных браузером
+        // Fetch fresh stats with cache busting
         const res = await fetch(`stats.json?nocache=${Date.now()}`);
-        if (!res.ok) throw new Error('Network error');
+        if (!res.ok) throw new Error();
         
         const json = await res.json();
         for(let i=1; i<=6; i++) {
@@ -34,20 +34,20 @@ async function updateData() {
             if (valElem) valElem.innerText = json[`v${i}`] || data.defaults[i-1];
         }
     } catch(e) {
-        // Если json не найден, используем стандартные значения
+        // Fallback to language defaults if JSON fails
         for(let i=1; i<=6; i++) {
             const valElem = document.getElementById(`v${i}`);
             if (valElem) valElem.innerText = data.defaults[i-1];
         }
     }
     
-    // Обновление заголовков карточек
+    // Update headers (h1-h6)
     data.h.forEach((hText, i) => {
         const hElem = document.getElementById(`h${i+1}`);
         if (hElem) hElem.innerText = hText;
     });
 
-    // Подсветка активной кнопки языка
+    // Update active button state
     document.querySelectorAll('.btn').forEach(b => {
         b.classList.toggle('active', b.id === currentLang);
     });
@@ -61,5 +61,5 @@ function setLang(l) {
 
 document.addEventListener('DOMContentLoaded', () => { 
     updateData(); 
-    setInterval(updateData, 30000); // Обновление каждые 30 секунд
+    setInterval(updateData, 30000); // Auto-refresh every 30 seconds
 });
