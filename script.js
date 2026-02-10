@@ -16,24 +16,50 @@ const lang = {
     }
 };
 
-let currentLang = localStorage.getItem('lang') || 'ua';
+let currentLang = localStorage.getItem('lang') || 'ru';
 
 async function updateData() {
     const data = lang[currentLang];
-    document.getElementById('status-text').innerText = data.status;
+    const statusElem = document.getElementById('status-text');
+    if (statusElem) statusElem.innerText = data.status;
     
     try {
+        // Добавление nocache предотвращает отображение старых данных браузером
         const res = await fetch(`stats.json?nocache=${Date.now()}`);
+        if (!res.ok) throw new Error('Network error');
+        
         const json = await res.json();
-        for(let i=1; i<=6; i++) document.getElementById(`v${i}`).innerText = json[`v${i}`] || data.defaults[i-1];
+        for(let i=1; i<=6; i++) {
+            const valElem = document.getElementById(`v${i}`);
+            if (valElem) valElem.innerText = json[`v${i}`] || data.defaults[i-1];
+        }
     } catch(e) {
-        data.defaults.forEach((v, i) => document.getElementById(`v${i+1}`).innerText = v);
+        // Если json не найден, используем стандартные значения
+        for(let i=1; i<=6; i++) {
+            const valElem = document.getElementById(`v${i}`);
+            if (valElem) valElem.innerText = data.defaults[i-1];
+        }
     }
     
-    data.h.forEach((h, i) => document.getElementById(`h${i+1}`).innerText = h);
-    document.querySelectorAll('.btn').forEach(b => b.classList.toggle('active', b.id === currentLang));
+    // Обновление заголовков карточек
+    data.h.forEach((hText, i) => {
+        const hElem = document.getElementById(`h${i+1}`);
+        if (hElem) hElem.innerText = hText;
+    });
+
+    // Подсветка активной кнопки языка
+    document.querySelectorAll('.btn').forEach(b => {
+        b.classList.toggle('active', b.id === currentLang);
+    });
 }
 
-function setLang(l) { currentLang = l; localStorage.setItem('lang', l); updateData(); }
+function setLang(l) { 
+    currentLang = l; 
+    localStorage.setItem('lang', l); 
+    updateData(); 
+}
 
-document.addEventListener('DOMContentLoaded', () => { updateData(); setInterval(updateData, 30000); });
+document.addEventListener('DOMContentLoaded', () => { 
+    updateData(); 
+    setInterval(updateData, 30000); // Обновление каждые 30 секунд
+});

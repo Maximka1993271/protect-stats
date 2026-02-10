@@ -1,64 +1,57 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProtectCMDS Моніторинг | Aegis Eternity</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>ProtectCMDS Dashboard</title>
     <link rel="stylesheet" href="Style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <div class="brand-box">
-            <h1>ProtectCMDS</h1>
-            <span class="version-badge">v4.4.1</span>
+    <div class="container">
+        <div class="header">
+            <div class="brand-box">
+                <h1>ProtectCMDS</h1>
+                <span class="version-badge">v4.6.0</span>
+            </div>
+            <div class="lang-switch">
+                <button class="btn" id="ua" onclick="setLang('ua')">UA</button>
+                <button class="btn" id="ru" onclick="setLang('ru')">RU</button>
+                <button class="btn" id="en" onclick="setLang('en')">EN</button>
+            </div>
         </div>
-        <div class="lang-switch">
-            <button class="btn" id="ua" onclick="setLang('ua')">UA</button>
-            <button class="btn" id="ru" onclick="setLang('ru')">RU</button>
-            <button class="btn" id="en" onclick="setLang('en')">EN</button>
+        <div class="status-bar">
+            <div class="badge">ACTIVE</div>
+            <div id="status-text">Система анализа трафика активна</div>
         </div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-label" id="h1">Оптимизация</div>
+                <div class="card-value" id="v1">Zero-Latency Engine</div>
+            </div>
+            <div class="card">
+                <div class="card-label" id="h2">Наказания</div>
+                <div class="card-value" id="v2">30m → 2h → 24h</div>
+            </div>
+            <div class="card">
+                <div class="card-label" id="h3">Админ-панель</div>
+                <div class="card-value" id="v3">3 уровня доступа</div>
+            </div>
+            <div class="card">
+                <div class="card-label" id="h4">Мониторинг</div>
+                <div class="card-value" id="v4">Активно</div>
+            </div>
+            <div class="card">
+                <div class="card-label" id="h5">Фильтрация</div>
+                <div class="card-value" id="v5">Динам. список</div>
+            </div>
+            <div class="card">
+                <div class="card-label" id="h6">Статус сервера</div>
+                <div class="card-value" id="v6">Защищено Aegis</div>
+            </div>
+        </div>
+        <div class="footer">Aegis Eternity Protection System</div>
     </div>
-
-    <div class="status-bar">
-        <div class="badge" id="badge-text">Active</div>
-        <div id="status-text">...</div>
-    </div>
-
-    <div class="grid">
-        <div class="card" style="animation-delay: 0.1s;">
-            <div class="card-label" id="h1">Оптимізація</div>
-            <div class="card-value" id="v1">...</div>
-        </div>
-        <div class="card" style="animation-delay: 0.2s;">
-            <div class="card-label" id="h2">Покарання</div>
-            <div class="card-value" id="v2">...</div>
-        </div>
-        <div class="card" style="animation-delay: 0.3s;">
-            <div class="card-label" id="h3">Адмін-панель</div>
-            <div class="card-value" id="v3">...</div>
-        </div>
-        <div class="card" style="animation-delay: 0.4s;">
-            <div class="card-label" id="h4">Моніторинг</div>
-            <div class="card-value" id="v4">...</div>
-        </div>
-        <div class="card" style="animation-delay: 0.5s;">
-            <div class="card-label" id="h5">Фільтрація</div>
-            <div class="card-value" id="v5">...</div>
-        </div>
-        <div class="card" style="animation-delay: 0.6s;">
-            <div class="card-label" id="h6">Статус сервера</div>
-            <div class="card-value" id="v6">...</div>
-        </div>
-    </div>
-
-    <div class="footer">
-        Powered by Aegis Eternity Technology © 2026
-    </div>
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
